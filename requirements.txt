@@ -1,0 +1,4 @@
+gym==0.18.0
+gym[atari]
+matplotlib
+torch==1.13.0
