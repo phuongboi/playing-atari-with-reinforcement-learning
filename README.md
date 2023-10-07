@@ -1,6 +1,6 @@
 ### This repo contain some of my re-implement of playing atari games with reinforcement learning
 #### [07/10/2023] Play Pong Game
-* Solve lunar lander problem from openai Gymnasium use Q-learning and experience replay memory [2].
+* Playing atari pong game from openai Gym use Q-learning and experience replay memory [2].
 * The implementation base on [Shubham Lohiya[1]](https://github.com/shubhlohiya/playing-atari-with-deep-RL) and references from [juliankappler [3]]( https://github.com/juliankappler/lunar-lander)
 
 * Run `python play_pong.py`
