@@ -64,8 +64,8 @@ class DQN:
         else:
             q_value = self.model(torch.FloatTensor(np.float32(state)).unsqueeze(0))
             action = np.argmax(q_value.detach().numpy())
-            print("action", action)
-            #action = q_value.max(1)[1].data[0]
+            #print(action)
+
         return action
 
 
@@ -82,7 +82,7 @@ class DQN:
         rewards = np.array([i[2] for i in random_sample])
         next_states = np.array([i[3] for i in random_sample])
         terminals = np.array([i[4] for i in random_sample])
-        return torch.FloatTensor(np.float32(states)), torch.from_numpy(actions), rewards, torch.FloatTensor(np.float32(next_states)), terminals
+        return torch.FloatTensor(np.float32(states)).cuda(), torch.from_numpy(actions).cuda(), rewards.cuda(), torch.FloatTensor(np.float32(next_states)).cuda(), terminals.cuda()
 
     def train_with_relay_buffer(self):
             # replay_memory_buffer size check
@@ -113,13 +113,14 @@ class DQN:
 
 
     def train(self, num_episodes=2000):
-        self.model.train()
+        self.model.cuda().train()
         self.loss_func = nn.MSELoss()
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.lr)
         steps_done = 0
         losses = []
         rewards_list = []
         for episode in range(num_episodes):
+            print("episode", episode)
             state = env.reset()
             reward_for_episode = 0
             #num_steps = 1000
@@ -127,7 +128,7 @@ class DQN:
             #for step in range(num_steps):
             while True:
                 epsilon = self.eps_end + (self.eps_start - self.eps_end) * np.exp(- steps_done / self.eps_decay)
-                print("curent eps", epsilon)
+                #print("curent eps", epsilon)
                 received_action = self.agent_policy(state, epsilon)
                 steps_done += 1
                 # print("received_action:", received_action)
@@ -144,7 +145,7 @@ class DQN:
                     losses.append(loss.item())
 
                 if steps_done % 10000 == 0:
-                    plot_stats(steps_done, rewards_list, losses)
+                    plot_stats(steps_done, rewards_list, losses, step)
                 if terminal:
                     rewards_list.append(reward_for_episode)
                     break
@@ -159,7 +160,7 @@ class DQN:
         env.close()
 
 
-def plot_stats(frame_idx, rewards, losses):
+def plot_stats(frame_idx, rewards, losses, step):
     clear_output(True)
     plt.figure(figsize=(20,5))
     plt.subplot(131)
@@ -168,7 +169,8 @@ def plot_stats(frame_idx, rewards, losses):
     plt.subplot(132)
     plt.title('loss')
     plt.plot(losses)
-    plt.show()
+    #plt.show()
+    plt.savefig('figures/fig_{}.png'.format(step)
 
 
 if __name__ == "__main__":
