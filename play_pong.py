@@ -145,7 +145,7 @@ class DQN:
                     losses.append(loss.item())
 
                 if steps_done % 10000 == 0:
-                    plot_stats(steps_done, rewards_list, losses, step)
+                    plot_stats(steps_done, rewards_list, losses, steps_done)
                 if terminal:
                     rewards_list.append(reward_for_episode)
                     break
