@@ -82,7 +82,7 @@ class DQN:
         rewards = np.array([i[2] for i in random_sample])
         next_states = np.array([i[3] for i in random_sample])
         terminals = np.array([i[4] for i in random_sample])
-        return torch.FloatTensor(np.float32(states)).cuda(), torch.from_numpy(actions).cuda(), torch.from_numpy(rewards).cuda(), torch.FloatTensor(np.float32(next_states)).cuda(), torch.from_numpy(terminals).cuda()
+        return torch.FloatTensor(np.float32(states)).cuda(), actions, rewards, torch.FloatTensor(np.float32(next_states)).cuda(), terminals
 
     def train_with_relay_buffer(self):
             # replay_memory_buffer size check
