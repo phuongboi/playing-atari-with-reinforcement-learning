@@ -170,7 +170,7 @@ def plot_stats(frame_idx, rewards, losses, step):
     plt.title('loss')
     plt.plot(losses)
     #plt.show()
-    plt.savefig('figures/fig_{}.png'.format(step)
+    plt.savefig('figures/fig_{}.png'.format(step))
 
 
 if __name__ == "__main__":
