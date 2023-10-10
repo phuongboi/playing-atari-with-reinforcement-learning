@@ -63,7 +63,7 @@ class DQN:
             action = random.randrange(self.num_actions)
         else:
             q_value = self.model(torch.FloatTensor(np.float32(state)).unsqueeze(0).cuda())
-            action = np.argmax(q_value.detach().numpy())
+            action = np.argmax(q_value.cpu().detach().numpy())
             #print(action)
 
         return action
