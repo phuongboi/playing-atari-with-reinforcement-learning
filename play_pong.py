@@ -98,12 +98,12 @@ class DQN:
 
         next_q_mat = self.model(next_states)
 
-        next_q_vec = np.max(next_q_mat.detach().numpy(), axis=1).squeeze()
+        next_q_vec = np.max(next_q_mat.cpu().detach().numpy(), axis=1).squeeze()
 
         target_vec = rewards + self.gamma * next_q_vec* (1 - terminals)
         q_mat = self.model(states)
         q_vec = q_mat.gather(dim=1, index=actions.unsqueeze(1)).type(torch.FloatTensor)
-        target_vec = torch.from_numpy(target_vec).unsqueeze(1).type(torch.FloatTensor)
+        target_vec = torch.from_numpy(target_vec).unsqueeze(1).type(torch.FloatTensor).cuda()
         loss = self.loss_func(q_vec, target_vec)
         self.optimizer.zero_grad()
         loss.backward()
