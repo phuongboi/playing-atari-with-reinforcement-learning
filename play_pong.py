@@ -5,6 +5,7 @@ import random
 import gym
 import torch
 from torch import nn
+import os
 from matplotlib import pyplot as plt
 from wrappers import make_atari_env
 from IPython.display import clear_output
@@ -82,7 +83,7 @@ class DQN:
         rewards = np.array([i[2] for i in random_sample])
         next_states = np.array([i[3] for i in random_sample])
         terminals = np.array([i[4] for i in random_sample])
-        return torch.FloatTensor(np.float32(states)).cuda(), actions, rewards, torch.FloatTensor(np.float32(next_states)).cuda(), terminals
+        return torch.FloatTensor(np.float32(states)).cuda(), torch.from_numpy(actions).cuda(), rewards, torch.FloatTensor(np.float32(next_states)).cuda(), terminals
 
     def train_with_relay_buffer(self):
             # replay_memory_buffer size check
@@ -102,7 +103,7 @@ class DQN:
 
         target_vec = rewards + self.gamma * next_q_vec* (1 - terminals)
         q_mat = self.model(states)
-        q_vec = q_mat.gather(dim=1, index=actions.unsqueeze(1)).type(torch.FloatTensor)
+        q_vec = q_mat.gather(dim=1, index=actions.unsqueeze(1)).type(torch.FloatTensor).cuda()
         target_vec = torch.from_numpy(target_vec).unsqueeze(1).type(torch.FloatTensor).cuda()
         loss = self.loss_func(q_vec, target_vec)
         self.optimizer.zero_grad()
@@ -153,10 +154,10 @@ class DQN:
 
 
             # Check for breaking condition
-            if (episode+1) % 500 == 0:
+            if (episode+1) % 800 == 0:
                 path = os.path.join(self.model_path, f"{env.spec.id}_episode_{episode+1}.pth")
                 print(f"Saving weights at Episode {episode+1} ...")
-                torch.save(model.state_dict(), path)
+                torch.save(self.model.state_dict(), path)
         env.close()
 
 
