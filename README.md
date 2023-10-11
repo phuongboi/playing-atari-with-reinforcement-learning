@@ -5,7 +5,7 @@
 
 * Run `python play_pong.py`
 ##### Training result
-<!-- ![alt text](https://github.com/phuongboi/lunar-lander/blob/main/v1.png) -->
+![alt text](https://github.com/phuongboi/playing-atari-with-reinforcement-learning/blob/main/figures/photo_2023-10-11_09-07-16.jpg)  
 
 
 ### Reference
